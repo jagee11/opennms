@@ -1,17 +1,15 @@
-package org.opennms.web.rest;
+package org.opennms.web.rest.rrd;
 
 import org.junit.runners.Parameterized;
 import org.opennms.core.test.xml.XmlTest;
-import org.opennms.web.rest.rrd.QueryRequest;
-import org.opennms.web.rest.rrd.QueryResponse;
 
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class QueryResponseRrdRestServiceTest extends XmlTest<QueryResponse> {
+public class QueryResponseTest extends XmlTest<QueryResponse> {
 
-    public QueryResponseRrdRestServiceTest(QueryResponse sampleObject, Object sampleXml, String schemaFile) {
+    public QueryResponseTest(QueryResponse sampleObject, Object sampleXml, String schemaFile) {
         super(sampleObject, sampleXml, schemaFile);
     }
 

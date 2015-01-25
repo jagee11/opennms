@@ -147,4 +147,43 @@ public class QueryRequest {
     public void setExpressions(final List<Expression> expressions) {
         this.expressions = expressions;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+       if (obj == null)
+       {
+          return false;
+       }
+       if (getClass() != obj.getClass())
+       {
+          return false;
+       }
+       final QueryRequest other = (QueryRequest) obj;
+
+       return   com.google.common.base.Objects.equal(this.step, other.step)
+             && com.google.common.base.Objects.equal(this.start, other.start)
+             && com.google.common.base.Objects.equal(this.end, other.end)
+             && com.google.common.base.Objects.equal(this.sources, other.sources)
+             && com.google.common.base.Objects.equal(this.expressions, other.expressions);
+    }
+
+    @Override
+    public int hashCode()
+    {
+       return com.google.common.base.Objects.hashCode(
+                 this.step, this.start, this.end, this.sources, this.expressions);
+    }
+
+    @Override
+    public String toString()
+    {
+       return com.google.common.base.Objects.toStringHelper(this)
+                 .add("Step", this.step)
+                 .add("Start", this.start)
+                 .add("End", this.end)
+                 .add("Sources", this.sources)
+                 .add("Expressions", this.expressions)
+                 .toString();
+    }
 }

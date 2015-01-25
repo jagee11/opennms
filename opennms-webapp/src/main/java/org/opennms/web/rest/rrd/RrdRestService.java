@@ -65,7 +65,7 @@ public class RrdRestService extends OnmsRestService {
                     request.getEnd(),
                     request.getSources());
 
-            // Do the calculations and build the list of resulting metrics
+            // Perform the calculations and build the list of resulting metrics
             final List<QueryResponse.Metric> metrics = new ArrayList<QueryResponse.Metric>(data.size());
             for (final SortedMap.Entry<Long, Map<String, Double>> dataEntry : data.entrySet()) {
                 Map<String, Double> values = dataEntry.getValue();
