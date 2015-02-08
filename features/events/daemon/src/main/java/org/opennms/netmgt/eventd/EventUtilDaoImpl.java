@@ -28,7 +28,6 @@
 
 package org.opennms.netmgt.eventd;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 import org.opennms.netmgt.dao.api.AssetRecordDao;
@@ -56,12 +55,12 @@ public class EventUtilDaoImpl extends AbstractEventUtil {
 	private IpInterfaceDao ipInterfaceDao;
 	
     @Override
-    protected String getNodeLabel(long nodeId) throws SQLException {
+    protected String getNodeLabel(long nodeId) {
         return nodeDao.getLabelForId(Integer.valueOf((int)nodeId));
     }
 
     @Override
-    protected String getIfAlias(long nodeId, String ipaddr) throws SQLException {
+    protected String getIfAlias(long nodeId, String ipaddr) {
         OnmsIpInterface iface = ipInterfaceDao.findByNodeIdAndIpAddress((int)nodeId, ipaddr);
         if (iface != null && iface.getSnmpInterface() != null) {
             return iface.getSnmpInterface().getIfAlias();
