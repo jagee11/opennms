@@ -59,6 +59,7 @@ import org.opennms.netmgt.config.mock.MockUserManager;
 import org.opennms.netmgt.config.users.Contact;
 import org.opennms.netmgt.config.users.User;
 import org.opennms.netmgt.dao.mock.MockEventIpcManager;
+import org.opennms.netmgt.eventd.EventUtil;
 import org.opennms.netmgt.mock.MockNetwork;
 import org.opennms.netmgt.mock.MockNotification;
 import org.opennms.netmgt.mock.MockPollerConfig;
@@ -66,6 +67,7 @@ import org.opennms.netmgt.mock.NotificationAnticipator;
 import org.opennms.test.DaoTestConfigBean;
 import org.opennms.test.JUnitConfigurationEnvironment;
 import org.opennms.test.mock.MockUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(OpenNMSJUnit4ClassRunner.class)
@@ -78,13 +80,23 @@ import org.springframework.test.context.ContextConfiguration;
         "classpath:/META-INF/opennms/applicationContext-daemon.xml",
         "classpath:/META-INF/opennms/mockEventIpcManager.xml",
         "classpath:/META-INF/opennms/applicationContext-minimal-conf.xml",
+        // Notifd
+        "classpath:/META-INF/opennms/applicationContext-notifdTest.xml"
 })
 @JUnitConfigurationEnvironment
 @JUnitTemporaryDatabase(tempDbClass=MockDatabase.class,reuseDatabase=false)
 @Ignore
 public class NotificationsTestCase implements TemporaryDatabaseAware<MockDatabase> {
 
+    @Autowired
     protected Notifd m_notifd;
+
+    @Autowired
+    protected BroadcastEventProcessor m_eventProcessor;
+
+    @Autowired
+    protected EventUtil m_eventUtil;
+
     protected MockEventIpcManager m_eventMgr;
     protected MockNotifdConfigManager m_notifdConfig;
     protected MockGroupManager m_groupManager;
@@ -127,17 +139,18 @@ public class NotificationsTestCase implements TemporaryDatabaseAware<MockDatabas
         
         m_anticipator = new NotificationAnticipator();
         MockNotificationStrategy.setAnticipator(m_anticipator);
-        
-        m_notifd = new Notifd();
-        m_notifd.setEventManager(m_eventMgr);
+
         m_notifd.setConfigManager(m_notifdConfig);
-        m_notifd.setGroupManager(m_groupManager);
-        m_notifd.setUserManager(m_userManager);
-        m_notifd.setDestinationPathManager(m_destinationPathManager);
-        m_notifd.setNotificationCommandManager(m_notificationCommandManger);
-        m_notifd.setNotificationManager(m_notificationManager);
-        m_notifd.setPollOutagesConfigManager(m_pollOutagesConfigManager);
-                
+
+        m_eventProcessor.setEventManager(m_eventMgr);
+        m_eventProcessor.setNotifdConfigManager(m_notifdConfig);
+        m_eventProcessor.setGroupManager(m_groupManager);
+        m_eventProcessor.setUserManager(m_userManager);
+        m_eventProcessor.setDestinationPathManager(m_destinationPathManager);
+        m_eventProcessor.setNotificationCommandManager(m_notificationCommandManger);
+        m_eventProcessor.setNotificationManager(m_notificationManager);
+        m_eventProcessor.setPollOutagesConfigManager(m_pollOutagesConfigManager);
+
         m_notifd.init();
         m_notifd.start();
         
