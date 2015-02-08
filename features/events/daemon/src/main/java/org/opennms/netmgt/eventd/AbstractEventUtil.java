@@ -897,7 +897,7 @@ public abstract class AbstractEventUtil implements EventUtil {
 	 *         otherwise
 	 * @param event a {@link org.opennms.netmgt.xml.event.Event} object.
 	 */
-	public final String expandParms(String inp, Event event, Map<String, Map<String, String>> decode) {
+	public String expandParms(String inp, Event event, Map<String, Map<String, String>> decode) {
 		int index1 = -1;
 		int index2 = -1;
 

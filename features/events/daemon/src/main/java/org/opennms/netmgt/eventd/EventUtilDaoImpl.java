@@ -29,6 +29,7 @@
 package org.opennms.netmgt.eventd;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.opennms.netmgt.dao.api.AssetRecordDao;
 import org.opennms.netmgt.dao.api.IpInterfaceDao;
@@ -36,14 +37,12 @@ import org.opennms.netmgt.dao.api.NodeDao;
 import org.opennms.netmgt.dao.api.SnmpInterfaceDao;
 import org.opennms.netmgt.model.OnmsAssetRecord;
 import org.opennms.netmgt.model.OnmsIpInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.opennms.netmgt.xml.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public class EventUtilDaoImpl extends AbstractEventUtil {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(EventUtilDaoImpl.class);
-	
+
 	@Autowired
 	private NodeDao nodeDao;
 	
@@ -110,5 +109,11 @@ public class EventUtilDaoImpl extends AbstractEventUtil {
             final String hostname = ints.getIpHostName();
             return (hostname == null) ? hostip : hostname;
         }
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public String expandParms(String inp, Event event, Map<String, Map<String, String>> decode) {
+        return super.expandParms(inp, event, decode);
     }
 }
