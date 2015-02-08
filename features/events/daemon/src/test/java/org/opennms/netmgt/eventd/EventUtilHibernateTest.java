@@ -86,7 +86,6 @@ public class EventUtilHibernateTest {
 		assertEquals("node1",label);
 		label = eventUtilDaoImpl.getNodeLabel(m_populator.getNode2().getId());
 		assertEquals("node2",label);
-		
     }
     
     @Test
@@ -100,10 +99,18 @@ public class EventUtilHibernateTest {
         OnmsNode node1 = m_populator.getNode1();
         OnmsAssetRecord asset1 = node1.getAssetRecord();
         asset1.setAdmin("some-adm1n-label");
+        asset1.setSerialNumber("42");
         m_assetRecordDao.saveOrUpdate(asset1);
 
         String asset = eventUtilDaoImpl.getAssetFieldValue("asset[admin]", node1.getId());
         assertEquals("some-adm1n-label", asset);
+
+        asset = eventUtilDaoImpl.getAssetFieldValue("asset[serialNumber]", node1.getId());
+        assertEquals("42", asset);
+
+        // Checking case sensitivity
+        asset = eventUtilDaoImpl.getAssetFieldValue("asset[serialnumber]", node1.getId());
+        assertEquals("42", asset);
     }
 
     @Test
@@ -112,10 +119,20 @@ public class EventUtilHibernateTest {
         OnmsHwEntity hwEntity = new OnmsHwEntity();
         hwEntity.setNode(node1);
         hwEntity.setEntPhysicalIndex(0);
+        hwEntity.setEntPhysicalName("Chassis");
         hwEntity.setEntPhysicalDescr("some-physical-d3scr");
         m_hwEntityDao.save(hwEntity);
 
+        // Access the field by index
         String hwfield = eventUtilDaoImpl.getHardwareFieldValue("hardware[0:entPhysicalDescr]", node1.getId());
+        assertEquals("some-physical-d3scr", hwfield);
+
+        // Access the field by name
+        hwfield = eventUtilDaoImpl.getHardwareFieldValue("hardware[Chassis:entPhysicalDescr]", node1.getId());
+        assertEquals("some-physical-d3scr", hwfield);
+
+        // Access the field by regex
+        hwfield = eventUtilDaoImpl.getHardwareFieldValue("hardware[~%Cha%:entPhysicalDescr]", node1.getId());
         assertEquals("some-physical-d3scr", hwfield);
     }
 }
